@@ -1,17 +1,27 @@
 const progress = document.getElementById('progress')
-const requestURL = 'https://netology-slow-rest.herokuapp.com/upload.php'
+const requestURL = 'https://students.netoservices.ru/nestjs-backend/upload'
+const form = document.getElementById('form')
 
 form.addEventListener('submit', function(event) {
     event.preventDefault()
 
-    const formData = new FormData(document.getElementById('form'))
     const xhr = new XMLHttpRequest()
+
+    setInterval(() => {
+        if (progress.value !== 1.0) {
+            progress.value += 0.1
+        }
+    }, 50)
+
+    xhr.addEventListener('readystatechange', () => {
+        if (xhr.readyState === xhr.DONE) {
+            console.log(xhr.response)
+        }
+    })
 
     xhr.open('POST', requestURL)
 
-    xhr.onprogress = function(event) {        
-        progress.value = event.loaded / 5000000
-    }
+    const formData = new FormData(form)
 
-    xhr.send(formData);
+    xhr.send(formData)
 })
