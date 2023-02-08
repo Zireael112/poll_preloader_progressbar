@@ -16,14 +16,16 @@ function sendRequest(method, url) {
         xhr.open(method, url) 
 
         xhr.addEventListener('readystatechange', () => {
-            if (xhr.readyState === xhr.DONE) {
+            if (xhr.readyState === xhr.DONE && xhr.status < 400) {
                 loader.classList.remove('loader_active')
                 resolve(JSON.parse(xhr.response))
             }
         })
 
         xhr.onerror = () => {
-            reject(xhr.response)
+            if (xhr.status >= 400) {
+                reject(xhr.response)
+            }
         }
 
         xhr.send()
@@ -58,3 +60,5 @@ sendRequest('GET', requestURL)
             `
         }
     })
+    .catch((data) => console.error(`Ошибка ---> ${data}`))
+
