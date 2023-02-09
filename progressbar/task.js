@@ -6,18 +6,19 @@ form.addEventListener('submit', function(event) {
     event.preventDefault()
 
     const xhr = new XMLHttpRequest()
-
-    setInterval(() => {
-        if (progress.value !== 1.0) {
-            progress.value += 0.1
-        }
-    }, 50)
-
-    xhr.addEventListener('readystatechange', () => {
+    
+    xhr.addEventListener('loadend', () => {
         if (xhr.readyState === xhr.DONE) {
             console.log(xhr.response)
         }
     })
+
+    xhr.upload.onloadstart = () => {
+        while(progress.value !== 1.0) {
+            progress.value += 0.1
+            continue
+        }
+    }
 
     xhr.open('POST', requestURL)
 
